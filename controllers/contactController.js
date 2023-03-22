@@ -11,8 +11,8 @@ const addContactController = async (req, res) => {
   const newContact = req.body;
   const { _id: owner } = req.user;
 
-  await addContact(newContact, owner);
-  res.status(201).json({ status: "success" });
+  const contact = await addContact(newContact, owner);
+  res.status(201).json(contact);
 };
 
 const getContactsController = async (req, res) => {
@@ -51,11 +51,11 @@ const updateContactController = async (req, res) => {
   if (!name && !email && !phone) {
     return res.status(400).json({ error: "missing fields" });
   }
-  const data = await updateContact(contact, id, owner);
+  const { data, newUpdateContact } = await updateContact(contact, id, owner);
   if (data.matchedCount === 0) {
     return res.status(404).json({ error: "Not found" });
   }
-  res.status(200).json({ status: "success" });
+  res.status(200).json(newUpdateContact);
 };
 
 const patchFavoriteController = async (req, res) => {

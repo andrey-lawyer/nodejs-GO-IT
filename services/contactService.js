@@ -31,7 +31,7 @@ const getContactId = async (contactId, owner) => {
 
 const addContact = async (newContact, owner) => {
   const { name, email, phone, favorite = false } = newContact;
-  await Contact.create({
+  return await Contact.create({
     name,
     email,
     phone,
@@ -58,7 +58,11 @@ const updateContact = async (contact, contactId, owner) => {
       $set: contact,
     }
   );
-  return data;
+  const newUpdateContact = await Contact.findOne({
+    _id: contactId,
+    owner,
+  });
+  return { data, newUpdateContact };
 };
 
 const updateStatusContact = async (favorite, id, owner) => {
